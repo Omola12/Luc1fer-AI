@@ -1,24 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lucifer - Login</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucifer - Awakening</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body.dark-bg {
+      background: linear-gradient(135deg, #0b001a, #1a000d, #0f0f1a);
+      color: #ff3366;
+      font-family: 'Segoe UI', 'Orbitron', 'Roboto', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated hellfire background glow */
+    body.dark-bg::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at center, rgba(255, 51, 102, 0.3) 0%, transparent 60%);
+      animation: pulseGlow 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    .login-container {
+      background: rgba(15, 5, 25, 0.85);
+      padding: 50px 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 
+        0 0 50px rgba(255, 51, 102, 0.4),
+        inset 0 0 30px rgba(255, 51, 102, 0.1);
+      border: 2px solid rgba(255, 51, 102, 0.3);
+      backdrop-filter: blur(15px);
+      position: relative;
+      z-index: 10;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* Pulsing border */
+    .login-container::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 24px;
+      background: linear-gradient(45deg, #ff3366, #ff0033, #cc1144, #ff6699);
+      animation: borderSpin 8s linear infinite;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    @keyframes borderSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 48px;
+      background: linear-gradient(90deg, #ff3366, #ff6699, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(255, 51, 102, 0.8);
+      margin-bottom: 10px;
+      letter-spacing: 6px;
+    }
+
+    h2 {
+      font-size: 20px;
+      color: #ff6699;
+      margin-bottom: 40px;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 25px 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(40, 20, 60, 0.6);
+      border: 1px solid rgba(255, 51, 102, 0.5);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.4s;
+    }
+
+    input:focus {
+      border-color: #ff6699;
+      box-shadow: 0 0 25px rgba(255, 102, 153, 0.7);
+      background: rgba(60, 30, 90, 0.8);
+    }
+
+    input::placeholder {
+      color: transparent;
+    }
+
+    label {
+      position: absolute;
+      left: 20px;
+      top: 16px;
+      color: #ff6699;
+      font-size: 16px;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 10px rgba(255, 102, 153, 0.5);
+    }
+
+    input:focus ~ label,
+    input:not(:placeholder-shown) ~ label {
+      top: -10px;
+      left: 15px;
+      font-size: 12px;
+      background: #0b001a;
+      padding: 0 8px;
+      color: #ff3366;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #ff3366, #cc1144);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.5s;
+      box-shadow: 0 8px 30px rgba(255, 51, 102, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(255, 51, 102, 0.8);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 1s ease;
+    }
+
+    .loading-screen.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .loading-text {
+      font-size: 36px;
+      color: #ff3366;
+      text-shadow: 0 0 30px #ff3366;
+      animation: flicker 2s infinite;
+    }
+
+    .hellfire {
+      font-size: 60px;
+      margin: 20px 0;
+      animation: burn 1.5s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    @keyframes burn {
+      0%, 100% { text-shadow: 0 0 40px #ff3366; }
+      50% { text-shadow: 0 0 80px #ff0033, 0 0 120px #ff3366; }
+    }
+
+    @media (max-width: 480px) {
+      .login-container { padding: 40px 30px; }
+      h1 { font-size: 40px; }
+    }
+  </style>
 </head>
 <body class="dark-bg">
-<div class="login-container">
-  <h1>Lucifer</h1>
-  <h2>Sign Up / Login</h2>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
-<script>
-function login(){
-  document.body.innerHTML = '<div class="loading">Loading LUMINITE 🌹...</div>';
-  setTimeout(()=>{ window.location.href = "dashboard.html"; }, 2000);
-}
-</script>
+  <div class="login-container">
+    <h1>LUCIFER</h1>
+    <h2>Awaken the Light-Bringer</h2>
+    <div class="input-group">
+      <input type="text" id="username" placeholder=" " required>
+      <label>Username</label>
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" placeholder=" " required>
+      <label>Password</label>
+    </div>
+    <button onclick="login()">ENTER THE ABYSS</button>
+  </div>
+
+  <!-- Dramatic Loading Screen -->
+  <div class="loading-screen" id="loading">
+    <div class="hellfire">🔥</div>
+    <div class="loading-text">Awakening LUMINITE AI Core...</div>
+    <div style="margin-top: 20px; color: #ff6699; font-size: 18px;">The Morning Star Rises</div>
+  </div>
+
+  <script>
+    const loadingScreen = document.getElementById('loading');
+
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        alert('Username and Password are required to awaken Lucifer.');
+        return;
+      }
+
+      // Trigger dramatic loading
+      loadingScreen.classList.add('active');
+
+      setTimeout(() => {
+        // Replace with your actual dashboard URL
+        window.location.href = "dashboard.html"; 
+        // Or for demo: alert("Lucifer has awakened. Welcome, " + username + ".");
+      }, 3000);
+    }
+
+    // Allow Enter key to login
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        login();
+      }
+    });
+
+    // Focus first input on load
+    window.onload = () => {
+      document.getElementById('username').focus();
+    };
+  </script>
 </body>
   </html>
