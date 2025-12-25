@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucifer - Feedback</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-bg">
+<div class="feedback-container">
+  <h1>Submit Feedback</h1>
+  <textarea id="feedback-msg" placeholder="Type your feedback"></textarea>
+  <button onclick="submitFeedback()">Submit</button>
+</div>
+<script>
+function submitFeedback(){
+  const msg = document.getElementById("feedback-msg").value;
+  const btn = event.target;
+  btn.innerText = "Loading...";
+  fetch("/api/feedback", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({message: msg})
+  }).then(r => r.json()).then(d => {
+    btn.innerText = "Submit";
+    alert("Feedback submitted!");
+  });
+}
+</script>
+</body>
+</html>
