@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucifer - Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-bg">
+<div class="login-container">
+  <h1>Lucifer</h1>
+  <h2>Sign Up / Login</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+<script>
+function login(){
+  document.body.innerHTML = '<div class="loading">Loading LUMINITE 🌹...</div>';
+  setTimeout(()=>{ window.location.href = "dashboard.html"; }, 2000);
+}
+</script>
+</body>
+  </html>
