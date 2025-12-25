@@ -1,31 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lucifer - Feedback</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucifer - Offer Thy Words</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body.dark-bg {
+      background: linear-gradient(135deg, #0b001a, #1a000d, #0f0f1a);
+      color: #ff6699;
+      font-family: 'Segoe UI', 'Orbitron', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Infernal background glow */
+    body.dark-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255, 51, 102, 0.3), transparent 70%);
+      animation: hellPulse 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes hellPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.15); }
+    }
+
+    .feedback-container {
+      background: rgba(15, 5, 25, 0.88);
+      padding: 50px 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 500px;
+      max-width: 90%;
+      box-shadow: 
+        0 0 60px rgba(255, 51, 102, 0.5),
+        inset 0 0 40px rgba(255, 51, 102, 0.1);
+      border: 2px solid rgba(255, 51, 102, 0.4);
+      backdrop-filter: blur(16px);
+      position: relative;
+      z-index: 10;
+      animation: levitate 7s ease-in-out infinite;
+    }
+
+    @keyframes levitate {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    /* Rotating infernal border */
+    .feedback-container::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 26px;
+      background: conic-gradient(from 0deg, #ff3366, #cc1144, #ff0033, #ff6699, #ff3366);
+      animation: spinBorder 10s linear infinite;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    @keyframes spinBorder {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 42px;
+      background: linear-gradient(90deg, #ff3366, #ff6699, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 40px rgba(255, 51, 102, 0.8);
+      margin-bottom: 15px;
+      letter-spacing: 5px;
+    }
+
+    .subtitle {
+      color: #ff6699;
+      font-size: 18px;
+      margin-bottom: 40px;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 30px 0;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 20px;
+      background: rgba(40, 20, 60, 0.6);
+      border: 1px solid rgba(255, 51, 102, 0.5);
+      border-radius: 16px;
+      color: #fff;
+      font-size: 16px;
+      resize: none;
+      outline: none;
+      transition: all 0.4s ease;
+    }
+
+    textarea:focus {
+      border-color: #ff6699;
+      box-shadow: 0 0 30px rgba(255, 102, 153, 0.8);
+      background: rgba(60, 30, 90, 0.8);
+    }
+
+    .char-counter {
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
+      font-size: 12px;
+      color: #ff6699;
+      opacity: 0.7;
+    }
+
+    button {
+      width: 100%;
+      padding: 18px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #ff3366, #cc1144);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      box-shadow: 0 10px 40px rgba(255, 51, 102, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(255, 51, 102, 0.9);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Success message */
+    .success {
+      margin-top: 30px;
+      font-size: 24px;
+      color: #ff6699;
+      text-shadow: 0 0 30px #ff3366;
+      animation: glowPulse 2s infinite;
+      display: none;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    @media (max-width: 480px) {
+      .feedback-container { padding: 40px 25px; }
+      h1 { font-size: 36px; }
+      textarea { height: 150px; }
+    }
+  </style>
 </head>
 <body class="dark-bg">
-<div class="feedback-container">
-  <h1>Submit Feedback</h1>
-  <textarea id="feedback-msg" placeholder="Type your feedback"></textarea>
-  <button onclick="submitFeedback()">Submit</button>
-</div>
-<script>
-function submitFeedback(){
-  const msg = document.getElementById("feedback-msg").value;
-  const btn = event.target;
-  btn.innerText = "Loading...";
-  fetch("/api/feedback", {
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({message: msg})
-  }).then(r => r.json()).then(d => {
-    btn.innerText = "Submit";
-    alert("Feedback submitted!");
-  });
-}
-</script>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="feedback-container">
+    <h1>LUCIFER</h1>
+    <p class="subtitle">Offer Thy Words Unto the Abyss</p>
+
+    <div class="input-group">
+      <textarea id="feedback-msg" maxlength="1000" placeholder=" "></textarea>
+      <div class="char-counter" id="char-count">0/1000</div>
+    </div>
+
+    <button id="submit-btn" onclick="submitFeedback()">SUBMIT TO THE FLAMES</button>
+
+    <div class="success" id="success-msg">Thy voice echoes through eternity... 🔥</div>
+  </div>
+
+  <script>
+    const textarea = document.getElementById('feedback-msg');
+    const charCount = document.getElementById('char-count');
+    const submitBtn = document.getElementById('submit-btn');
+    const successMsg = document.getElementById('success-msg');
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Character counter
+    textarea.addEventListener('input', () => {
+      charCount.textContent = `${textarea.value.length}/1000`;
+    });
+
+    // Confetti explosion
+    function launchConfetti() {
+      let particles = [];
+      const colors = ['#ff3366', '#ff6699', '#cc1144', '#ff0033'];
+
+      function createParticle() {
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: Math.random() * 8 + 4,
+          speedY: Math.random() * 5 + 3,
+          speedX: Math.random() * 6 - 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: Math.random() * 10 - 5
+        };
+      }
+
+      for (let i = 0; i < 150; i++) {
+        particles.push(createParticle());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.rotation += p.rotationSpeed;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation * Math.PI / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+          ctx.restore();
+
+          if (p.y > canvas.height) particles.splice(i, 1);
+        });
+
+        if (particles.length > 0) requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    async function submitFeedback() {
+      const msg = textarea.value.trim();
+
+      if (!msg) {
+        alert('Speak thy mind, mortal. The void hungers for words.');
+        return;
+      }
+
+      if (msg.length < 10) {
+        alert('Thy offering is too meager. Speak with greater conviction.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'OFFERING TO THE ABYSS...';
+
+      // Simulate API call (replace with real endpoint later)
+      try {
+        // Uncomment when you have real backend:
+        // await fetch("/api/feedback", {
+        //   method: "POST",
+        //   headers: {"Content-Type": "application/json"},
+        //   body: JSON.stringify({message: msg, timestamp: new Date().toISOString()})
+        // });
+
+        // Simulated success after delay
+        setTimeout(() => {
+          successMsg.style.display = 'block';
+          submitBtn.style.display = 'none';
+          launchConfetti();
+
+          // Reset after 5 seconds
+          setTimeout(() => {
+            textarea.value = '';
+            charCount.textContent = '0/1000';
+            successMsg.style.display = 'none';
+            submitBtn.style.display = 'block';
+            submitBtn.innerText = 'SUBMIT TO THE FLAMES';
+            submitBtn.disabled = false;
+          }, 5000);
+        }, 2000);
+
+      } catch (err) {
+        alert('The flames rejected thy offering. Try again.');
+        submitBtn.innerText = 'SUBMIT TO THE FLAMES';
+        submitBtn.disabled = false;
+      }
+    }
+
+    // Resize canvas on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
 </body>
-</html>
+  </html>
