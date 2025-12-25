@@ -1,0 +1,8 @@
+body.dark-bg { background:#0b0c10; color:#c5c6c7; font-family:Arial,sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+.login-container, .chat-container, .pricing-container, .feedback-container { background:#1f2833; padding:30px; border-radius:12px; text-align:center; width:350px; }
+input, textarea { width:80%; padding:10px; margin:10px 0; border-radius:6px; border:none; }
+button { padding:10px 20px; border:none; border-radius:6px; background:#45a29e; color:white; cursor:pointer; }
+button:hover { background:#66fcf1; }
+#chat-box { height:300px; overflow-y:auto; border:1px solid #45a29e; margin-bottom:10px; padding:10px; background:#0b0c10; }
+.loading { font-size:24px; text-align:center; animation: pulse 1s infinite; }
+@keyframes pulse { 0%{opacity:0.2}50%{opacity:1}100%{opacity:0.2} }
