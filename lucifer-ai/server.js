@@ -110,3 +110,13 @@ app.post("/api/feedback", (req, res) => {
 });
 
 app.listen(3000, () => console.log("Lucifer AI running on http://localhost:3000"));
+let messages = [
+  { role: "user", content: "Write a quicksort in Python" },
+  { role: "assistant", content: "Previous AI reply here..." },
+  { role: "user", content: "Now make it async in JS" }  // New different question
+];
+
+fetch("/api/chat", {
+  method: "POST",
+  body: JSON.stringify({ messages, temperature: 0.8 })
+});
